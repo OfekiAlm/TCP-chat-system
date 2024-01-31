@@ -7,7 +7,26 @@ The server is able to handle multiple clients at the same time.
 
 clients can create and join channels, send messages to all the members of the channel. 
 
+### Prequsites
+- Linux
+- gcc
+- make
+
 ### How to use
+First you need to clone the project to your computer:
+```bash
+git clone https://github.com/OfekiAlm/TCP-chat-system
+```
+Then you should open the project directory:
+```bash
+cd TCP-chat-system
+```
+
+For compiling purposes you need to have `/bin` directory in your root directory to store the programs.
+```bash
+mkdir bin
+```
+
 You can run the `/scripts/run.sh` script to compile and run the project.
 ```bash
 chmod +x ./scripts/run.sh
