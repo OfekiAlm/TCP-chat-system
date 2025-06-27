@@ -12,7 +12,9 @@ typedef enum request_type_t
     LOGIN,                 /* Login message type */
     LOGOUT,                /* Logout message type */
     SEND_MESSAGE,          /* Send message type */
+    SEND_PRIVATE_MESSAGE,  /* Send a private message */
     RECEIEVE_MESSAGE,      /* Receive message type */
+    RECEIVE_PRIVATE_MESSAGE, /* Receive private message */
     CREATE_GROUP,          /* Create group message type */
     JOIN_GROUP,            /* Join group message type */
     LEAVE_GROUP,           /* Leave group message type */
@@ -72,6 +74,12 @@ typedef struct protocol_message_t
         {
             char words[MAX_WORDS_BLACKLIST * MAX_WORD_LENGTH];
         } blacklist_words;
+
+        struct private_message_t
+        {
+            char recipient[MAX_USERNAME_LENGTH];
+            char content[MAX_CONTENT_LENGTH];
+        } privateMessage;
         struct
         {
             int groupID;
@@ -93,7 +101,7 @@ void sendMessage(int sock, RequestMessage *message);
  * @param sock The socket to send the message on.
  * @param message The chat message to send.
  */
-void sendChatMessage(int sock, chatMessage *message);
+void sendChatMessage(int sock, chatMessage *message, MessageType type);
 
 /**
  * sends a ResponseMessage from a socket.
