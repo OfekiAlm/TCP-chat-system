@@ -63,6 +63,11 @@ void handleGroupCreation(int current_fd, char *username, RequestMessage message,
 void handleSendMessage(int current_fd, char *username, RequestMessage message, ResponseMessage response);
 
 /**
+ * Handles sending a private message to another user.
+ */
+void handlePrivateMessage(int current_fd, char *username, RequestMessage message, ResponseMessage *response);
+
+/**
  * @brief Handles the "Show Blacklist" command received from a client.
  * 
  * @param current_fd The file descriptor of the client connection.

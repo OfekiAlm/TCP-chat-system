@@ -8,10 +8,10 @@ void sendMessage(int sock, RequestMessage *message)
     send(sock, message, sizeof(RequestMessage) - sizeof(char *), 0);
 }
 
-void sendChatMessage(int sock, chatMessage *message)
+void sendChatMessage(int sock, chatMessage *message, MessageType type)
 {
     ResponseMessage response;
-    response.type = RECEIEVE_MESSAGE;
+    response.type = type;
     response.status = SUCCESS;
     response.message = *message;
 

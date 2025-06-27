@@ -300,6 +300,9 @@ void handleClientRequest(int current_fd, int new_socket, RequestMessage message,
         // Handle send message
         handleSendMessage(current_fd, username, message, response);
         break;
+    case SEND_PRIVATE_MESSAGE:
+        handlePrivateMessage(current_fd, username, message, &response);
+        break;
     case CREATE_GROUP:
         // Handle create group
         handleGroupCreation(current_fd, username, message, response);
@@ -374,6 +377,33 @@ void handleSendMessage(int current_fd, char *username, RequestMessage message, R
     response.type = SEND_MESSAGE;
     response.description = "Message sent successfully\n";
     sendResponse(current_fd, &response);
+}
+
+void handlePrivateMessage(int current_fd, char *username, RequestMessage message, ResponseMessage *response)
+{
+    char *recipient = message.request.privateMessage.recipient;
+    int target_fd = getFdByUsername(users, recipient);
+
+    if (target_fd == USER_NOT_FOUND)
+    {
+        response->status = ERROR;
+        response->type = SEND_PRIVATE_MESSAGE;
+        response->description = "User not found\n";
+        sendResponse(current_fd, response);
+        return;
+    }
+
+    chatMessage chat_message;
+    strncpy(chat_message.content, message.request.privateMessage.content, MAX_CONTENT_LENGTH);
+    chat_message.sender = *(getUser(users, current_fd));
+    chat_message.timestamp = time(NULL);
+
+    sendChatMessage(target_fd, &chat_message, RECEIVE_PRIVATE_MESSAGE);
+
+    response->status = SUCCESS;
+    response->type = SEND_PRIVATE_MESSAGE;
+    response->description = "Private message sent\n";
+    sendResponse(current_fd, response);
 }
 
 void handleGroupCreation(int current_fd, char *username, RequestMessage message, ResponseMessage response)
@@ -487,7 +517,7 @@ int sendMessageToGroup(int sender, int group_id, chatMessage message)
     {
         if (member_fds[i] != sender)
         {
-            sendChatMessage(member_fds[i], &message);
+            sendChatMessage(member_fds[i], &message, RECEIEVE_MESSAGE);
         }
     }
     return 0;

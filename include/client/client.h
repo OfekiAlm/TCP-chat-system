@@ -8,6 +8,7 @@
 #define ADD_WORD_BLACKLIST_COMMAND "!add_blacklist"
 #define SHOW_BLACKLIST_COMMAND "!show_blacklist"
 #define HELP_BLACKLIST "!blacklist"
+#define PRIVATE_MESSAGE_COMMAND "!pm"
 
 #define CLOSE_PROGRAM_COMMAND "!close_program"
 #define LEAVE_GROUP_COMMAND "!leave_group"

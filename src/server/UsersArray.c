@@ -81,6 +81,18 @@ int checkUsernameExists(Users *users, char *username)
     return USER_NOT_FOUND;
 }
 
+int getFdByUsername(Users *users, char *username)
+{
+    for (int i = 0; i < users->count; i++)
+    {
+        if (strcmp(users->users_arr[i].username, username) == 0)
+        {
+            return users->users_arr[i].fd;
+        }
+    }
+    return USER_NOT_FOUND;
+}
+
 void printUsers(Users *users)
 {
     printf("Going to print users\n");

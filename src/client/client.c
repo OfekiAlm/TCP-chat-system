@@ -277,6 +277,24 @@ void handleUserMessageInGroup(int sock, RequestMessage message, char *buffer)
     strncpy(message.request.sendMessage.message.content, buffer, MAX_CONTENT_LENGTH);
     message.request.sendMessage.message.content[strcspn(message.request.sendMessage.message.content, "\n")] = '\0';
 
+    if (strncmp(buffer, PRIVATE_MESSAGE_COMMAND, strlen(PRIVATE_MESSAGE_COMMAND)) == 0)
+    {
+        char *ptr = buffer + strlen(PRIVATE_MESSAGE_COMMAND);
+        while (*ptr == ' ') ptr++;
+        char *recipient = strtok(ptr, " ");
+        char *content = strtok(NULL, "");
+        if (recipient == NULL || content == NULL)
+        {
+            print_bold_by_color("Usage: !pm <user> <message>\n", RED);
+            return;
+        }
+        message.type = SEND_PRIVATE_MESSAGE;
+        strncpy(message.request.privateMessage.recipient, recipient, MAX_USERNAME_LENGTH);
+        strncpy(message.request.privateMessage.content, content, MAX_CONTENT_LENGTH);
+        sendMessage(sock, &message);
+        return;
+    }
+
     if (strcmp(message.request.sendMessage.message.content, "") == 0)
     {
         print_bold_by_color("You can't send an empty message\n", RED);
@@ -429,6 +447,10 @@ void handleServerResponse(int sock, ResponseMessage *response)
         break;
     case RECEIEVE_MESSAGE:
         print_bold_by_color("Received message\n", GREEN);
+        printChatMessage(response->message);
+        break;
+    case RECEIVE_PRIVATE_MESSAGE:
+        print_bold_by_color("Private message\n", GREEN);
         printChatMessage(response->message);
         break;
     case CREATE_GROUP:

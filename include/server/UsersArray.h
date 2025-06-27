@@ -54,6 +54,11 @@ void updateUserGroupId(Users *users, int fd, int group_id);
 int checkUsernameExists(Users *users, char *username);
 
 /**
+ * Retrieves a user's file descriptor by username.
+ */
+int getFdByUsername(Users *users, char *username);
+
+/**
  * @brief Prints the array of users.
  * 
  * @param users The pointer to the Users object.
